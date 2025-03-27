@@ -92,8 +92,10 @@ Esta pseudo-clase permite seleccionar elementos específicos de un tipo particul
     border: 2px solid #blue;
 }
 ```
-nt
-## Container Queries(Reemplazo de Media Queries)
+
+---
+
+# Container Queries(Reemplazo de Media Queries)
 
 ### 1. Diferencia entre @media queries y @container queries
 
@@ -190,7 +192,9 @@ Un componente adaptable es aquel que modifica su diseño y comportamiento basán
 }
 ```
 
-## Variables CSS y mejoras en custom properties
+---
+
+# Variables CSS y mejoras en custom properties
 
 ### 1. Uso avanzado de var(), calc(), clamp(), min(), max()
 
@@ -288,7 +292,9 @@ Un tema dinámico utiliza variables CSS para modificar la apariencia de una inte
 }
 ```
 
-## Nuevas funciones CSS de color y accesibilidad
+---
+
+# Nuevas funciones CSS de color y accesibilidad
 
 ### 1. color-mix() - Mezclando colores en CSS puro
 
@@ -373,7 +379,9 @@ Estos son nuevos espacios de color que proporcionan una representación más pre
 }
 ```
 
-## Scroll-driven Animations y efectos visuales CSS avanzados
+---
+
+# Scroll-driven Animations y efectos visuales CSS avanzados
 
 ### 1. view-timeline y animation-timeline: Animaciones basadas en scroll sin JavaScript
 
@@ -467,7 +475,9 @@ Un efecto de animación en scroll combina diferentes propiedades para crear una 
 }
 ```
 
-## Optimización de rendimiento con CSS
+---
+
+# Optimización de rendimiento con CSS
 
 ### 1. Uso de content-visibility para mejorar performance
 
@@ -558,7 +568,9 @@ Técnicas y estrategias para reducir la cantidad de recálculos de layout y repi
 }
 ```
 
-## Interactividad sin JavaScript
+---
+
+# Interactividad sin JavaScript
 
 ### 1. Cómo usar :hover, :focus-within y :target para efectos interactivos
 
@@ -657,3 +669,6 @@ input[type="range"] {
     accent-color: #17a2b8;
 }
 ```
+
+
+---
