@@ -1,1140 +1,656 @@
-# CSS Avanzado
+# CSS Avanzado - Guía Completa
 
-### 1. :has() - El Parent Selector
+## Módulo 1: Selectores y funciones avanzadas en CSS
 
-El selector `:has()` es una de las características más esperadas en CSS, ya que permite seleccionar elementos basados en sus elementos hijos o descendientes. Este selector es comúnmente conocido como "parent selector" (selector de padre).
+### 1. :has() - El selector padre
 
-#### Sintaxis básica
+#### Definición
+El selector `:has()` es una pseudo-clase que permite seleccionar elementos basándose en sus elementos hijos o descendientes. Es conocido como el "selector padre" porque finalmente nos permite seleccionar elementos padres basándonos en sus hijos.
+
+#### Para qué sirve
+- Permite seleccionar elementos contenedores basándose en su contenido
+- Facilita la modificación de estilos de elementos padres según sus hijos
+- Reduce la necesidad de clases adicionales o JavaScript para manipular elementos padres
+
+#### Ejemplos
 ```css
-/* Selecciona párrafos que contienen enlaces */
-p:has(a) { /* estilos */ }
-
-/* Selecciona elementos que contienen una imagen seguida de un párrafo */
-div:has(img + p) { /* estilos */ }
-```
-
-#### Casos de uso prácticos
-- Estilizar formularios basados en el estado de sus inputs
-- Modificar tarjetas que contienen ciertos elementos
-- Adaptar layouts según el contenido interno
-
-### 2. :is(), :where() y :not() - Simplificando Selectores
-
-Estos selectores funcionales ayudan a escribir CSS más limpio y mantenible, reduciendo la repetición de código.
-
-#### :is()
-Permite agrupar selectores de manera más concisa:
-```css
-/* En lugar de escribir */
-header p, main p, footer p { color: blue; }
-
-/* Podemos escribir */
-:is(header, main, footer) p { color: blue; }
-```
-
-#### :where()
-Similar a `:is()`, pero con especificidad cero:
-```css
-/* Útil para crear estilos base fácilmente sobrescribibles */
-:where(article, section) p { color: #333; }
-```
-
-#### :not()
-Permite seleccionar elementos que no coinciden con ciertos criterios:
-```css
-/* Selecciona todos los párrafos que no son la primera línea */
-p:not(:first-of-type) { margin-top: 1em; }
-```
-
-### 3. :nth-child(n of selector) - Selección Precisa
-
-Esta nueva sintaxis del selector `:nth-child()` permite una selección más específica de elementos.
-
-#### Sintaxis y ejemplos
-```css
-/* Selecciona el segundo párrafo entre los elementos p */
-p:nth-child(2 of p) { font-weight: bold; }
-
-/* Selecciona elementos pares solo entre las imágenes */
-img:nth-child(even of img) { border: 2px solid blue; }
-```
-
-#### Ventajas
-- Mayor precisión en la selección de elementos
-- Reduce la necesidad de clases adicionales
-- Mejora la mantenibilidad del código
-
----
-
-### 7. CSS Interactivity sin JavaScript
-
-CSS moderno ofrece poderosas características para crear interactividad sin necesidad de JavaScript, permitiendo interfaces dinámicas y responsivas con puro CSS.
-
-#### Selectores de Interactividad Avanzados
-```css
-/* Efectos hover con propagación */
-.card:hover > .card-content {
-  transform: scale(1.05);
-  box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+/* Selecciona párrafos que contienen imágenes */
+p:has(img) {
+    display: flex;
+    align-items: center;
 }
 
-/* Manejo de foco en formularios */
-.form-group:focus-within {
-  background: var(--highlight-color);
-  border-color: var(--accent-color);
+/* Estiliza el contenedor cuando tiene elementos específicos */
+.container:has(.elemento-especial) {
+    background-color: #f0f0f0;
+    padding: 20px;
 }
 
-/* Navegación con :target */
-.tab:target {
-  display: block;
-  animation: fadeIn 0.3s ease-in;
+/* Modifica el diseño cuando hay múltiples elementos */
+.galeria:has(> img:nth-child(3)) {
+    grid-template-columns: repeat(3, 1fr);
 }
 ```
 
-#### Scroll Snap para Carruseles
+### 2. :is(), :where() y :not()
+
+#### Definición
+Estos selectores son pseudo-clases que permiten simplificar y optimizar la escritura de selectores complejos en CSS:
+- `:is()`: Agrupa selectores y mantiene la especificidad del selector más específico
+- `:where()`: Similar a `:is()` pero con especificidad cero
+- `:not()`: Selecciona elementos que no coinciden con el selector dado
+
+#### Para qué sirve
+- Reduce la repetición de código en selectores complejos
+- Mejora la legibilidad del código CSS
+- Permite crear reglas más flexibles y mantenibles
+
+#### Ejemplos
 ```css
-.carousel-container {
-  scroll-snap-type: x mandatory;
-  overflow-x: auto;
-  display: flex;
-  -webkit-overflow-scrolling: touch;
+/* Usando :is() para simplificar selectores */
+:is(header, main, footer) p {
+    margin-bottom: 1rem;
 }
 
-.carousel-slide {
-  scroll-snap-align: start;
-  flex: 0 0 100%;
-  height: 300px;
-  /* Previene el scroll en Safari */
-  scroll-snap-stop: always;
+/* Usando :where() para estilos de baja especificidad */
+:where(article, section) > h2 {
+    color: #333;
+}
+
+/* Combinando :not() con otros selectores */
+.menu-item:not(.active) {
+    opacity: 0.7;
 }
 ```
 
-#### Personalización de Elementos Nativos
+### 3. :nth-child(n of selector)
+
+#### Definición
+Esta pseudo-clase permite seleccionar elementos específicos de un tipo particular dentro de un conjunto de hermanos, utilizando una expresión numérica.
+
+#### Para qué sirve
+- Selecciona elementos con mayor precisión
+- Permite filtrar elementos por tipo antes de aplicar la fórmula nth-child
+- Facilita la creación de patrones de diseño complejos
+
+#### Ejemplos
 ```css
-/* Personalización de checkboxes y radios */
-.custom-form {
-  accent-color: var(--brand-color);
+/* Selecciona el segundo párrafo entre elementos p */
+:nth-child(2 of p) {
+    font-weight: bold;
 }
 
-/* Estilizado de scrollbars */
-.custom-scroll {
-  scrollbar-width: thin;
-  scrollbar-color: var(--thumb-color) var(--track-color);
+/* Estiliza cada tercer elemento de tipo .card */
+:nth-child(3n of .card) {
+    margin-right: 0;
 }
 
-/* Estilizado de selección de texto */
-::selection {
-  background-color: var(--brand-color);
-  color: white;
+/* Aplica estilos al primer elemento de tipo .imagen */
+:nth-child(1 of .imagen) {
+    border: 2px solid #blue;
+}
+```
+nt
+## Módulo 2: Container Queries - Adiós a los Media Queries tradicionales
+
+### 1. Diferencia entre @media queries y @container queries
+
+#### Definición
+Mientras que los Media Queries se basan en las dimensiones de la ventana del navegador, los Container Queries permiten aplicar estilos basados en el tamaño del contenedor padre más cercano.
+
+#### Para qué sirve
+- Permite crear componentes verdaderamente reutilizables y adaptables
+- Facilita el diseño responsivo a nivel de componente
+- Mejora la modularidad y la mantenibilidad del código
+
+#### Ejemplos
+```css
+/* Definiendo un contenedor */
+.card-container {
+    container-type: inline-size;
+    container-name: card;
+}
+
+/* Aplicando estilos basados en el tamaño del contenedor */
+@container card (min-width: 400px) {
+    .card {
+        display: grid;
+        grid-template-columns: 200px 1fr;
+    }
 }
 ```
 
-#### Casos de Uso Prácticos
+### 2. Implementación de container queries en proyectos responsivos
 
-##### Menú Desplegable sin JavaScript
+#### Definición
+Los Container Queries requieren la definición explícita de contenedores de consulta mediante la propiedad container-type, permitiendo que los elementos hijos respondan al tamaño de su contenedor.
+
+#### Para qué sirve
+- Crea layouts más flexibles y adaptables
+- Permite reutilizar componentes en diferentes contextos
+- Simplifica el mantenimiento de componentes responsivos
+
+#### Ejemplos
 ```css
-.dropdown {
-  position: relative;
+/* Configuración básica de un contenedor */
+.sidebar {
+    container-type: inline-size;
 }
 
-.dropdown-toggle:focus + .dropdown-menu,
-.dropdown-menu:hover {
-  display: block;
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.dropdown-menu {
-  position: absolute;
-  opacity: 0;
-  transform: translateY(-10px);
-  transition: all 0.3s ease;
+/* Adaptando componentes según el contenedor */
+@container (min-width: 300px) {
+    .widget {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+    }
 }
 ```
 
-##### Galería de Imágenes Interactiva
+### 3. Ejemplo práctico: Diseñar un componente adaptable
+
+#### Definición
+Un componente adaptable es aquel que modifica su diseño y comportamiento basándose en el espacio disponible en su contenedor, independientemente del viewport.
+
+#### Para qué sirve
+- Crea interfaces más flexibles y reutilizables
+- Mejora la experiencia de usuario en diferentes contextos
+- Facilita el mantenimiento y la escalabilidad
+
+#### Ejemplos
 ```css
-.gallery {
-  display: grid;
-  gap: 1rem;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+/* Configuración del contenedor principal */
+.product-card {
+    container-type: inline-size;
+    container-name: product;
 }
 
-.gallery-item:hover {
-  z-index: 1;
-  transform: scale(1.1);
-  transition: transform 0.3s ease;
+/* Estilos base */
+.product-content {
+    display: flex;
+    flex-direction: column;
 }
 
-.gallery-item:focus-within {
-  outline: 3px solid var(--accent-color);
-  outline-offset: 3px;
-}
-```
-
-#### Ventajas y Consideraciones
-- Mejor rendimiento al evitar JavaScript
-- Menor consumo de recursos del navegador
-- Comportamiento nativo y accesible
-- Compatibilidad con gestos táctiles
-- Degradación elegante en navegadores antiguos
-
----
-
-### 4. Container Queries - Diseño Adaptable por Contenedor
-
-Los Container Queries representan una evolución en el diseño responsive, permitiendo que los elementos se adapten basándose en el tamaño de su contenedor en lugar del viewport.
-
-#### Diferencias con Media Queries
-```css
-/* Media Query tradicional - basado en viewport */
-@media (min-width: 768px) {
-  .card { flex-direction: row; }
+/* Adaptaciones según el tamaño del contenedor */
+@container product (min-width: 500px) {
+    .product-content {
+        flex-direction: row;
+        align-items: center;
+    }
+    
+    .product-image {
+        width: 40%;
+    }
+    
+    .product-info {
+        width: 60%;
+        padding-left: 2rem;
+    }
 }
 
-/* Container Query - basado en contenedor */
-@container (min-width: 400px) {
-  .card { flex-direction: row; }
-}
-```
+## Módulo 3: Variables CSS y mejoras en custom properties
 
-#### Implementación Básica
-```css
-/* Definir el contenedor */
-.container {
-  container-type: inline-size;
-  container-name: main-container;
-}
+### 1. Uso avanzado de var(), calc(), clamp(), min(), max()
 
-/* Estilos basados en el contenedor */
-@container main-container (min-width: 600px) {
-  .component {
-    display: grid;
-    grid-template-columns: 1fr 2fr;
-  }
-}
-```
+#### Definición
+Estas funciones son herramientas fundamentales para realizar cálculos y manipular valores en CSS de manera dinámica y flexible:
+- `var()`: Permite usar variables CSS personalizadas
+- `calc()`: Realiza operaciones matemáticas
+- `clamp()`: Define un valor entre un mínimo y máximo
+- `min()` y `max()`: Seleccionan el valor menor o mayor entre varios
 
-#### Casos de uso prácticos
-- Componentes de tarjetas adaptables
-- Layouts de galería flexibles
-- Navegación responsive basada en espacio disponible
-- Widgets que se adaptan a diferentes áreas de contenido
+#### Para qué sirve
+- Crea diseños más dinámicos y adaptables
+- Permite realizar cálculos complejos directamente en CSS
+- Facilita la creación de layouts responsivos sin media queries
 
----
-
-### 7. CSS Interactivity sin JavaScript
-
-CSS moderno ofrece poderosas características para crear interactividad sin necesidad de JavaScript, permitiendo interfaces dinámicas y responsivas con puro CSS.
-
-#### Selectores de Interactividad Avanzados
-```css
-/* Efectos hover con propagación */
-.card:hover > .card-content {
-  transform: scale(1.05);
-  box-shadow: 0 10px 20px rgba(0,0,0,0.2);
-}
-
-/* Manejo de foco en formularios */
-.form-group:focus-within {
-  background: var(--highlight-color);
-  border-color: var(--accent-color);
-}
-
-/* Navegación con :target */
-.tab:target {
-  display: block;
-  animation: fadeIn 0.3s ease-in;
-}
-```
-
-#### Scroll Snap para Carruseles
-```css
-.carousel-container {
-  scroll-snap-type: x mandatory;
-  overflow-x: auto;
-  display: flex;
-  -webkit-overflow-scrolling: touch;
-}
-
-.carousel-slide {
-  scroll-snap-align: start;
-  flex: 0 0 100%;
-  height: 300px;
-  /* Previene el scroll en Safari */
-  scroll-snap-stop: always;
-}
-```
-
-#### Personalización de Elementos Nativos
-```css
-/* Personalización de checkboxes y radios */
-.custom-form {
-  accent-color: var(--brand-color);
-}
-
-/* Estilizado de scrollbars */
-.custom-scroll {
-  scrollbar-width: thin;
-  scrollbar-color: var(--thumb-color) var(--track-color);
-}
-
-/* Estilizado de selección de texto */
-::selection {
-  background-color: var(--brand-color);
-  color: white;
-}
-```
-
-#### Casos de Uso Prácticos
-
-##### Menú Desplegable sin JavaScript
-```css
-.dropdown {
-  position: relative;
-}
-
-.dropdown-toggle:focus + .dropdown-menu,
-.dropdown-menu:hover {
-  display: block;
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.dropdown-menu {
-  position: absolute;
-  opacity: 0;
-  transform: translateY(-10px);
-  transition: all 0.3s ease;
-}
-```
-
-##### Galería de Imágenes Interactiva
-```css
-.gallery {
-  display: grid;
-  gap: 1rem;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-}
-
-.gallery-item:hover {
-  z-index: 1;
-  transform: scale(1.1);
-  transition: transform 0.3s ease;
-}
-
-.gallery-item:focus-within {
-  outline: 3px solid var(--accent-color);
-  outline-offset: 3px;
-}
-```
-
-#### Ventajas y Consideraciones
-- Mejor rendimiento al evitar JavaScript
-- Menor consumo de recursos del navegador
-- Comportamiento nativo y accesible
-- Compatibilidad con gestos táctiles
-- Degradación elegante en navegadores antiguos
-
----
-
-Este módulo explora características avanzadas de CSS que permiten crear diseños más flexibles y mantenibles. Estas herramientas modernas proporcionan mayor control sobre la presentación y el comportamiento de los elementos en diferentes contextos.
-
-### 4. Funciones Modernas de Color y Accesibilidad
-
-CSS ha evolucionado para ofrecer nuevas funciones de manipulación de color y espacios de color más precisos, mejorando tanto la creatividad como la accesibilidad.
-
-#### color-mix() - Mezclando Colores
-```css
-/* Mezcla básica de colores */
-.elemento {
-  /* Mezcla 50-50 de azul y rojo */
-  background-color: color-mix(in srgb, blue 50%, red);
-  
-  /* Mezcla con transparencia */
-  border-color: color-mix(in srgb, #00000080 50%, #ffffff);
-}
-```
-
-#### color-contrast() - Contraste Automático
-```css
-/* Selecciona automáticamente el color con mejor contraste */
-.texto-adaptativo {
-  color: color-contrast(var(--background-color) vs
-    black, white, #777777);
-}
-```
-
-#### Nuevos Espacios de Color
-
-##### OKLCH y OKLAB
-```css
-.elemento-moderno {
-  /* OKLCH: Luminancia, Croma, Matiz */
-  color: oklch(70% 0.15 180);
-  
-  /* OKLAB: Más preciso perceptualmente */
-  background-color: oklab(70% -0.05 0.1);
-}
-```
-
-##### HWB (Hue, Whiteness, Blackness)
-```css
-.elemento-hwb {
-  /* HWB: Más intuitivo para diseñadores */
-  color: hwb(200 30% 10%);
-  background-color: hwb(0 100% 0%); /* Blanco puro */
-}
-```
-
-#### Mejores Prácticas de Accesibilidad
-
-- Usar `color-contrast()` para garantizar legibilidad
-- Implementar temas claros y oscuros con nuevos espacios de color
-- Verificar ratios de contraste con herramientas modernas
-- Considerar daltonismo al elegir combinaciones de colores
-
-#### Ventajas de los Nuevos Espacios de Color
-- Mayor precisión en la representación de colores
-- Mejor manejo de la gama de colores en diferentes dispositivos
-- Transiciones más suaves y naturales
-- Mayor control sobre la percepción del color
-
----
-
-### 7. CSS Interactivity sin JavaScript
-
-CSS moderno ofrece poderosas características para crear interactividad sin necesidad de JavaScript, permitiendo interfaces dinámicas y responsivas con puro CSS.
-
-#### Selectores de Interactividad Avanzados
-```css
-/* Efectos hover con propagación */
-.card:hover > .card-content {
-  transform: scale(1.05);
-  box-shadow: 0 10px 20px rgba(0,0,0,0.2);
-}
-
-/* Manejo de foco en formularios */
-.form-group:focus-within {
-  background: var(--highlight-color);
-  border-color: var(--accent-color);
-}
-
-/* Navegación con :target */
-.tab:target {
-  display: block;
-  animation: fadeIn 0.3s ease-in;
-}
-```
-
-#### Scroll Snap para Carruseles
-```css
-.carousel-container {
-  scroll-snap-type: x mandatory;
-  overflow-x: auto;
-  display: flex;
-  -webkit-overflow-scrolling: touch;
-}
-
-.carousel-slide {
-  scroll-snap-align: start;
-  flex: 0 0 100%;
-  height: 300px;
-  /* Previene el scroll en Safari */
-  scroll-snap-stop: always;
-}
-```
-
-#### Personalización de Elementos Nativos
-```css
-/* Personalización de checkboxes y radios */
-.custom-form {
-  accent-color: var(--brand-color);
-}
-
-/* Estilizado de scrollbars */
-.custom-scroll {
-  scrollbar-width: thin;
-  scrollbar-color: var(--thumb-color) var(--track-color);
-}
-
-/* Estilizado de selección de texto */
-::selection {
-  background-color: var(--brand-color);
-  color: white;
-}
-```
-
-#### Casos de Uso Prácticos
-
-##### Menú Desplegable sin JavaScript
-```css
-.dropdown {
-  position: relative;
-}
-
-.dropdown-toggle:focus + .dropdown-menu,
-.dropdown-menu:hover {
-  display: block;
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.dropdown-menu {
-  position: absolute;
-  opacity: 0;
-  transform: translateY(-10px);
-  transition: all 0.3s ease;
-}
-```
-
-##### Galería de Imágenes Interactiva
-```css
-.gallery {
-  display: grid;
-  gap: 1rem;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-}
-
-.gallery-item:hover {
-  z-index: 1;
-  transform: scale(1.1);
-  transition: transform 0.3s ease;
-}
-
-.gallery-item:focus-within {
-  outline: 3px solid var(--accent-color);
-  outline-offset: 3px;
-}
-```
-
-#### Ventajas y Consideraciones
-- Mejor rendimiento al evitar JavaScript
-- Menor consumo de recursos del navegador
-- Comportamiento nativo y accesible
-- Compatibilidad con gestos táctiles
-- Degradación elegante en navegadores antiguos
-
----
-
-### 5. CSS Variables y Custom Properties - Mejoras Avanzadas
-
-Las variables CSS y propiedades personalizadas han evolucionado para ofrecer mayor funcionalidad y tipado, permitiendo crear sistemas de diseño más robustos y dinámicos.
-
-#### Variables CSS con @property
-```css
-/* Definición de una variable CSS tipada */
-@property --main-color {
-  syntax: '<color>';
-  initial-value: #1a1a1a;
-  inherits: true;
-}
-
-/* Uso de la variable tipada */
-.element {
-  background-color: var(--main-color);
-  transition: --main-color 0.3s ease;
-}
-```
-
-#### Funciones CSS Avanzadas
-
-##### calc(), min(), max() y clamp()
-```css
-/* Cálculos dinámicos */
-.container {
-  /* Calcula el ancho basado en el viewport */
-  width: calc(100vw - 2rem);
-  
-  /* Establece límites mínimos y máximos */
-  font-size: clamp(1rem, 2vw, 2rem);
-  
-  /* Usa min() y max() para valores responsivos */
-  padding: min(5vw, 50px);
-  margin: max(20px, 2vh);
-}
-```
-
-#### Casos de uso prácticos
-
-##### Sistema de Temas Dinámicos
+#### Ejemplos
 ```css
 :root {
-  --primary-hue: 220;
-  --theme-primary: hsl(var(--primary-hue) 70% 50%);
-  --theme-secondary: hsl(calc(var(--primary-hue) + 180) 70% 50%);
+    --spacing-base: 1rem;
+    --font-size-base: 16px;
+}
+
+.contenedor {
+    /* Usando calc() con variables */
+    padding: calc(var(--spacing-base) * 2);
+    
+    /* Usando clamp() para tamaños responsivos */
+    width: clamp(300px, 80%, 1200px);
+    
+    /* Combinando min() y max() */
+    font-size: max(var(--font-size-base), min(2vw, 24px));
+}
+```
+
+### 2. Nueva API @property para definir variables con tipos específicos
+
+#### Definición
+La API @property permite definir propiedades personalizadas con tipos de datos específicos, valores iniciales y comportamientos de animación.
+
+#### Para qué sirve
+- Define variables CSS con tipos de datos estrictos
+- Permite animaciones suaves entre valores
+- Mejora el control sobre las propiedades personalizadas
+
+#### Ejemplos
+```css
+/* Definiendo una propiedad numérica animable */
+@property --rotacion {
+    syntax: '<angle>';
+    initial-value: 0deg;
+    inherits: false;
+}
+
+/* Definiendo una propiedad de color */
+@property --color-principal {
+    syntax: '<color>';
+    initial-value: #007bff;
+    inherits: true;
+}
+```
+
+### 3. Ejemplo práctico: Crear un tema dinámico con variables
+
+#### Definición
+Un tema dinámico utiliza variables CSS para modificar la apariencia de una interfaz de manera consistente y mantenible.
+
+#### Para qué sirve
+- Facilita la implementación de temas claros y oscuros
+- Permite cambios globales de estilo con pocas modificaciones
+- Mejora la consistencia del diseño
+
+#### Ejemplos
+```css
+/* Definición de variables para el tema */
+:root {
+    --color-fondo: #ffffff;
+    --color-texto: #333333;
+    --color-primario: #0066cc;
+    --espaciado: 1rem;
 }
 
 /* Tema oscuro */
 [data-theme="dark"] {
-  --primary-hue: 240;
-  --theme-background: hsl(var(--primary-hue) 15% 15%);
-  --theme-text: hsl(var(--primary-hue) 15% 85%);
+    --color-fondo: #1a1a1a;
+    --color-texto: #ffffff;
+    --color-primario: #66b3ff;
+}
+
+/* Aplicación de variables */
+.componente {
+    background-color: var(--color-fondo);
+    color: var(--color-texto);
+    padding: var(--espaciado);
+    border: 1px solid var(--color-primario);
 }
 ```
 
-##### Animaciones con Variables CSS
-```css
-.animated-element {
-  --x-position: 0;
-  transform: translateX(var(--x-position));
-  transition: --x-position 0.3s ease;
-}
+## Módulo 4: Nuevas funciones de color y accesibilidad
 
-.animated-element:hover {
-  --x-position: 100px;
+### 1. color-mix() - Mezclando colores en CSS puro
+
+#### Definición
+La función color-mix() permite mezclar dos colores directamente en CSS, especificando el espacio de color y el porcentaje de mezcla deseado.
+
+#### Para qué sirve
+- Crea variaciones de color sin necesidad de preprocesadores
+- Genera paletas de color dinámicas
+- Facilita la creación de efectos de color avanzados
+
+#### Ejemplos
+```css
+.elemento {
+    /* Mezcla básica de colores */
+    background-color: color-mix(in srgb, #ff0000 50%, #0000ff);
+    
+    /* Creando un color semi-transparente */
+    border-color: color-mix(in srgb, var(--color-primario) 75%, transparent);
+    
+    /* Mezclando en espacio de color LCH */
+    color: color-mix(in lch, #3f0f9c 60%, #d9376e);
 }
 ```
 
-#### Ventajas y Mejores Prácticas
-- Tipado fuerte con @property para mejor control y validación
-- Transiciones y animaciones más eficientes
-- Sistemas de diseño escalables y mantenibles
-- Temas dinámicos con cambios en tiempo real
-- Mejor rendimiento que las variables de JavaScript
+### 2. color-contrast() - Selección automática de colores con buen contraste
 
----
+#### Definición
+La función color-contrast() selecciona automáticamente el color con mejor contraste de una lista de opciones, garantizando la legibilidad.
 
-### 7. CSS Interactivity sin JavaScript
+#### Para qué sirve
+- Mejora la accesibilidad automáticamente
+- Asegura un contraste adecuado en textos
+- Simplifica la creación de interfaces accesibles
 
-CSS moderno ofrece poderosas características para crear interactividad sin necesidad de JavaScript, permitiendo interfaces dinámicas y responsivas con puro CSS.
-
-#### Selectores de Interactividad Avanzados
+#### Ejemplos
 ```css
-/* Efectos hover con propagación */
-.card:hover > .card-content {
-  transform: scale(1.05);
-  box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+.texto {
+    /* Selección automática del mejor contraste */
+    color: color-contrast(var(--color-fondo) vs
+        black, white, #767676);
 }
 
-/* Manejo de foco en formularios */
-.form-group:focus-within {
-  background: var(--highlight-color);
-  border-color: var(--accent-color);
-}
-
-/* Navegación con :target */
-.tab:target {
-  display: block;
-  animation: fadeIn 0.3s ease-in;
+.boton {
+    background: var(--color-primario);
+    /* Asegurando texto legible */
+    color: color-contrast(var(--color-primario) vs
+        white, black);
 }
 ```
 
-#### Scroll Snap para Carruseles
+### 3. Uso de oklch, oklab, hwb() para modelos de color más realistas
+
+#### Definición
+Estos son nuevos espacios de color que proporcionan una representación más precisa y perceptualmente uniforme de los colores.
+
+#### Para qué sirve
+- Permite crear paletas de color más naturales
+- Mejora la precisión en las transiciones de color
+- Facilita la creación de esquemas de color accesibles
+
+#### Ejemplos
 ```css
-.carousel-container {
-  scroll-snap-type: x mandatory;
-  overflow-x: auto;
-  display: flex;
-  -webkit-overflow-scrolling: touch;
+.elemento {
+    /* Usando OKLCH para colores vibrantes */
+    background-color: oklch(70% 0.15 340);
+    
+    /* Transiciones suaves con OKLAB */
+    color: oklab(80% -0.02 0.13);
+    
+    /* Usando HWB para colores intuitivos */
+    border-color: hwb(280 10% 20%);
 }
 
-.carousel-slide {
-  scroll-snap-align: start;
-  flex: 0 0 100%;
-  height: 300px;
-  /* Previene el scroll en Safari */
-  scroll-snap-stop: always;
+/* Gradiente usando OKLCH */
+.gradiente {
+    background: linear-gradient(
+        to right,
+        oklch(80% 0.12 30),
+        oklch(65% 0.15 180)
+    );
 }
 ```
 
-#### Personalización de Elementos Nativos
+## Módulo 5: Scroll-driven Animations y efectos visuales avanzados
+
+### 1. view-timeline y animation-timeline: Animaciones basadas en scroll sin JavaScript
+
+#### Definición
+Estas propiedades permiten crear animaciones que se ejecutan en función de la posición del scroll, sin necesidad de JavaScript, utilizando el timeline de vista como controlador.
+
+#### Para qué sirve
+- Crea animaciones suaves vinculadas al scroll
+- Mejora el rendimiento al no depender de JavaScript
+- Permite efectos visuales más naturales y fluidos
+
+#### Ejemplos
 ```css
-/* Personalización de checkboxes y radios */
-.custom-form {
-  accent-color: var(--brand-color);
-}
-
-/* Estilizado de scrollbars */
-.custom-scroll {
-  scrollbar-width: thin;
-  scrollbar-color: var(--thumb-color) var(--track-color);
-}
-
-/* Estilizado de selección de texto */
-::selection {
-  background-color: var(--brand-color);
-  color: white;
-}
-```
-
-#### Casos de Uso Prácticos
-
-##### Menú Desplegable sin JavaScript
-```css
-.dropdown {
-  position: relative;
-}
-
-.dropdown-toggle:focus + .dropdown-menu,
-.dropdown-menu:hover {
-  display: block;
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.dropdown-menu {
-  position: absolute;
-  opacity: 0;
-  transform: translateY(-10px);
-  transition: all 0.3s ease;
-}
-```
-
-##### Galería de Imágenes Interactiva
-```css
-.gallery {
-  display: grid;
-  gap: 1rem;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-}
-
-.gallery-item:hover {
-  z-index: 1;
-  transform: scale(1.1);
-  transition: transform 0.3s ease;
-}
-
-.gallery-item:focus-within {
-  outline: 3px solid var(--accent-color);
-  outline-offset: 3px;
-}
-```
-
-#### Ventajas y Consideraciones
-- Mejor rendimiento al evitar JavaScript
-- Menor consumo de recursos del navegador
-- Comportamiento nativo y accesible
-- Compatibilidad con gestos táctiles
-- Degradación elegante en navegadores antiguos
-
----
-
-### 6. Optimización de Rendimiento en CSS
-
-La optimización del rendimiento en CSS es crucial para crear sitios web rápidos y eficientes. Las nuevas características y técnicas nos permiten mejorar significativamente el rendimiento sin comprometer la experiencia del usuario.
-
-#### content-visibility y contain
-```css
-/* Optimiza el renderizado de secciones fuera de la vista */
-.seccion-larga {
-  content-visibility: auto;
-  contain-intrinsic-size: 0 500px;
-}
-
-/* Aísla el contenido para mejor rendimiento */
-.componente-complejo {
-  contain: content;
-  contain: strict;
-}
-```
-
-#### Carga Progresiva de Estilos
-```css
-/* Estilos críticos inline */
-.header {
-  /* Estilos mínimos para el primer render */
-  display: flex;
-  padding: 1rem;
-}
-
-/* Estilos no críticos en archivo separado */
-@import url('estilos-no-criticos.css') layer(enhancement);
-
-/* Carga condicional de estilos */
-@layer enhancement {
-  @media (min-width: 768px) {
-    .header {
-      /* Estilos adicionales para desktop */
-      backdrop-filter: blur(10px);
-    }
-  }
-}
-```
-
-#### Minimización de Reflows y Repaints
-```css
-/* Uso de propiedades que evitan reflow */
-.elemento-animado {
-  transform: translateX(100px);  /* Mejor que left: 100px */
-  opacity: 0.8;                  /* Mejor que visibility */
-  will-change: transform;        /* Avisa al navegador sobre animaciones */
-}
-
-/* Agrupación de cambios visuales */
-.optimizado {
-  /* Usar la propiedad compuesta */
-  transform: translateX(10px) scale(1.2) rotate(45deg);
-  
-  /* En lugar de propiedades individuales */
-  /* transform: translateX(10px); */
-  /* transform: scale(1.2); */
-  /* transform: rotate(45deg); */
-}
-```
-
-#### Mejores Prácticas de Rendimiento
-
-##### Selectores Eficientes
-```css
-/* Evitar selectores profundamente anidados */
-/* ❌ Malo */
-.header nav ul li a span { color: blue; }
-
-/* ✅ Bueno */
-.nav-link-text { color: blue; }
-```
-
-##### Optimización de Animaciones
-```css
-.animacion-optimizada {
-  /* Usar propiedades que solo afecten a la composición */
-  transform: translateZ(0);  /* Fuerza la aceleración por hardware */
-  backface-visibility: hidden;
-  perspective: 1000px;
-}
-
-@keyframes slide-optimizado {
-  from { transform: translateX(0); }
-  to { transform: translateX(100px); }
-}
-```
-
-#### Ventajas y Consideraciones
-- Mejor rendimiento en dispositivos de gama baja
-- Reducción del consumo de batería en móviles
-- Mejora en los tiempos de carga inicial
-- Experiencia de usuario más fluida
-- Mejor posicionamiento SEO por velocidad
-
----
-
-### 7. CSS Interactivity sin JavaScript
-
-CSS moderno ofrece poderosas características para crear interactividad sin necesidad de JavaScript, permitiendo interfaces dinámicas y responsivas con puro CSS.
-
-#### Selectores de Interactividad Avanzados
-```css
-/* Efectos hover con propagación */
-.card:hover > .card-content {
-  transform: scale(1.05);
-  box-shadow: 0 10px 20px rgba(0,0,0,0.2);
-}
-
-/* Manejo de foco en formularios */
-.form-group:focus-within {
-  background: var(--highlight-color);
-  border-color: var(--accent-color);
-}
-
-/* Navegación con :target */
-.tab:target {
-  display: block;
-  animation: fadeIn 0.3s ease-in;
-}
-```
-
-#### Scroll Snap para Carruseles
-```css
-.carousel-container {
-  scroll-snap-type: x mandatory;
-  overflow-x: auto;
-  display: flex;
-  -webkit-overflow-scrolling: touch;
-}
-
-.carousel-slide {
-  scroll-snap-align: start;
-  flex: 0 0 100%;
-  height: 300px;
-  /* Previene el scroll en Safari */
-  scroll-snap-stop: always;
-}
-```
-
-#### Personalización de Elementos Nativos
-```css
-/* Personalización de checkboxes y radios */
-.custom-form {
-  accent-color: var(--brand-color);
-}
-
-/* Estilizado de scrollbars */
-.custom-scroll {
-  scrollbar-width: thin;
-  scrollbar-color: var(--thumb-color) var(--track-color);
-}
-
-/* Estilizado de selección de texto */
-::selection {
-  background-color: var(--brand-color);
-  color: white;
-}
-```
-
-#### Casos de Uso Prácticos
-
-##### Menú Desplegable sin JavaScript
-```css
-.dropdown {
-  position: relative;
-}
-
-.dropdown-toggle:focus + .dropdown-menu,
-.dropdown-menu:hover {
-  display: block;
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.dropdown-menu {
-  position: absolute;
-  opacity: 0;
-  transform: translateY(-10px);
-  transition: all 0.3s ease;
-}
-```
-
-##### Galería de Imágenes Interactiva
-```css
-.gallery {
-  display: grid;
-  gap: 1rem;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-}
-
-.gallery-item:hover {
-  z-index: 1;
-  transform: scale(1.1);
-  transition: transform 0.3s ease;
-}
-
-.gallery-item:focus-within {
-  outline: 3px solid var(--accent-color);
-  outline-offset: 3px;
-}
-```
-
-#### Ventajas y Consideraciones
-- Mejor rendimiento al evitar JavaScript
-- Menor consumo de recursos del navegador
-- Comportamiento nativo y accesible
-- Compatibilidad con gestos táctiles
-- Degradación elegante en navegadores antiguos
-
----
-
-#### View Timeline y Scroll-driven Animations
-```css
-/* Definir una línea de tiempo basada en scroll */
-.elemento-animado {
-  view-timeline-name: --elemento-scroll;
-  view-timeline-axis: block;
-  animation-timeline: --elemento-scroll;
-  animation-name: aparecer;
+.elemento {
+    animation: aparecer linear;
+    animation-timeline: view();
+    animation-range: entry 20% cover 50%;
 }
 
 @keyframes aparecer {
-  from { opacity: 0; transform: translateY(50px); }
-  to { opacity: 1; transform: translateY(0); }
+    from {
+        opacity: 0;
+        transform: translateY(50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 ```
 
-#### Efectos Visuales con backdrop-filter
+### 2. Nuevas opciones para backdrop-filter y blend-mode
+
+#### Definición
+Estas propiedades permiten aplicar efectos visuales avanzados a elementos y sus fondos, creando efectos de superposición y mezcla.
+
+#### Para qué sirve
+- Crea efectos de desenfoque y filtrado en fondos
+- Permite efectos de mezcla entre capas
+- Mejora la profundidad visual de interfaces
+
+#### Ejemplos
 ```css
-.panel-cristal {
-  /* Efecto de cristal esmerilado */
-  backdrop-filter: blur(10px) saturate(180%);
-  background-color: rgba(255, 255, 255, 0.5);
+.modal {
+    backdrop-filter: blur(10px) brightness(90%);
+    background: rgba(255, 255, 255, 0.1);
 }
 
-.panel-oscuro {
-  /* Efecto oscuro con ajuste de contraste */
-  backdrop-filter: blur(5px) brightness(70%);
-  background-color: rgba(0, 0, 0, 0.3);
+.imagen-overlay {
+    mix-blend-mode: overlay;
+    background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
 }
 ```
 
-#### Blend Modes Avanzados
+### 3. Ejemplo práctico: Crear un efecto de animación en scroll
+
+#### Definición
+Un efecto de animación en scroll combina diferentes propiedades para crear una experiencia visual interactiva mientras el usuario desplaza la página.
+
+#### Para qué sirve
+- Mejora la experiencia de usuario
+- Crea transiciones suaves y naturales
+- Aumenta el engagement con el contenido
+
+#### Ejemplos
 ```css
-.imagen-mezclada {
-  /* Mezcla de colores con el fondo */
-  mix-blend-mode: overlay;
+/* Configuración del contenedor */
+.scroll-container {
+    scroll-timeline-name: --revelar;
+    scroll-timeline-axis: block;
 }
 
-.contenedor-mezcla {
-  /* Mezcla de capas dentro del contenedor */
-  background-blend-mode: multiply;
-  background-image: 
-    linear-gradient(45deg, #ff6b6b, #4ecdc4),
-    url('textura.jpg');
-}
-```
-
-#### Casos de Uso Prácticos
-
-##### Animaciones de Scroll Suaves
-```css
-/* Revelación progresiva de contenido */
-.seccion-contenido {
-  view-timeline-name: --revelar-seccion;
-  view-timeline-axis: block;
-  animation: revelarContenido linear both;
-  animation-timeline: --revelar-seccion;
-}
-
-@keyframes revelarContenido {
-  from {
+/* Elemento con animación */
+.scroll-elemento {
     opacity: 0;
-    transform: translateX(-30px);
-  }
-  to {
+    transform: translateX(-100px);
+    animation: deslizar-entrada linear;
+    animation-timeline: --revelar;
+    animation-range: entry 10% cover 30%;
+}
+
+@keyframes deslizar-entrada {
+    from {
+        opacity: 0;
+        transform: translateX(-100px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+```
+
+## Módulo 6: Optimización de rendimiento con CSS
+
+### 1. Uso de content-visibility para mejorar performance
+
+#### Definición
+La propiedad content-visibility permite al navegador omitir el renderizado de elementos que no están en la ventana visible, mejorando significativamente el rendimiento de la página.
+
+#### Para qué sirve
+- Reduce el tiempo de carga inicial
+- Optimiza el renderizado de contenido fuera de pantalla
+- Mejora el rendimiento en páginas largas
+
+#### Ejemplos
+```css
+.seccion-larga {
+    content-visibility: auto;
+    contain-intrinsic-size: 0 500px;
+}
+
+.componente-pesado {
+    content-visibility: auto;
+    contain-intrinsic-size: 1000px;
+}
+```
+
+### 2. Estrategias de carga progresiva y lazy loading de estilos
+
+#### Definición
+Técnicas que permiten cargar estilos de manera gradual y bajo demanda, priorizando el contenido visible inicialmente.
+
+#### Para qué sirve
+- Mejora el tiempo de carga percibido
+- Optimiza el uso de recursos
+- Prioriza el contenido crítico
+
+#### Ejemplos
+```css
+/* Estilos críticos inline */
+.header {
+    font-display: swap;
+    background-image: url(placeholder.jpg);
+}
+
+/* Carga diferida de imágenes */
+.imagen-diferida {
+    loading: lazy;
+    background-image: none;
+}
+
+@media (min-width: 768px) {
+    .imagen-diferida {
+        background-image: url(imagen-completa.jpg);
+    }
+}
+```
+
+### 3. Buenas prácticas para minimizar reflows y repaints
+
+#### Definición
+Técnicas y estrategias para reducir la cantidad de recálculos de layout y repintados que el navegador debe realizar.
+
+#### Para qué sirve
+- Mejora la fluidez de la interfaz
+- Reduce el consumo de CPU
+- Optimiza la experiencia en dispositivos móviles
+
+#### Ejemplos
+```css
+/* Usar transform en lugar de propiedades que causan reflow */
+.elemento-animado {
+    transform: translateX(100px);
+    will-change: transform;
+}
+
+/* Agrupar cambios de layout */
+.contenedor-optimizado {
+    contain: layout;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+}
+
+/* Evitar cálculos frecuentes */
+.elemento-fijo {
+    position: fixed;
+    top: 0;
+    left: 0;
+    transform: translate3d(0, 0, 0);
+    backface-visibility: hidden;
+}
+```
+
+## Módulo 7: Interactividad sin JavaScript
+
+### 1. Cómo usar :hover, :focus-within y :target para efectos interactivos
+
+#### Definición
+Estas pseudo-clases permiten crear interacciones y efectos visuales sin necesidad de JavaScript, respondiendo a acciones del usuario como hover, focus y navegación por anclas.
+
+#### Para qué sirve
+- Crea interacciones fluidas y naturales
+- Mejora la accesibilidad de la interfaz
+- Reduce la dependencia de JavaScript
+
+#### Ejemplos
+```css
+/* Menú desplegable con :hover */
+.menu-item:hover .submenu {
     opacity: 1;
-    transform: translateX(0);
-  }
-}
-```
-
-##### Efectos de Superposición Modernos
-```css
-.tarjeta-moderna {
-  /* Efecto de superposición con degradado */
-  position: relative;
-  overflow: hidden;
+    transform: translateY(0);
+    pointer-events: auto;
 }
 
-.tarjeta-moderna::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(45deg, 
-    rgba(255,255,255,0.1),
-    rgba(255,255,255,0.5));
-  backdrop-filter: blur(5px);
-  mix-blend-mode: overlay;
-}
-```
-
-#### Ventajas y Consideraciones
-- Mejor rendimiento que las animaciones basadas en JavaScript
-- Mayor control sobre efectos visuales complejos
-- Compatibilidad progresiva con navegadores modernos
-- Reducción de la dependencia de librerías externas
-- Optimización automática por el navegador
-
----
-
-### 7. CSS Interactivity sin JavaScript
-
-CSS moderno ofrece poderosas características para crear interactividad sin necesidad de JavaScript, permitiendo interfaces dinámicas y responsivas con puro CSS.
-
-#### Selectores de Interactividad Avanzados
-```css
-/* Efectos hover con propagación */
-.card:hover > .card-content {
-  transform: scale(1.05);
-  box-shadow: 0 10px 20px rgba(0,0,0,0.2);
-}
-
-/* Manejo de foco en formularios */
+/* Resaltado de formulario con :focus-within */
 .form-group:focus-within {
-  background: var(--highlight-color);
-  border-color: var(--accent-color);
+    background: rgba(0, 123, 255, 0.1);
+    border-color: #007bff;
 }
 
-/* Navegación con :target */
-.tab:target {
-  display: block;
-  animation: fadeIn 0.3s ease-in;
+/* Modal con :target */
+.modal:target {
+    display: flex;
+    opacity: 1;
 }
 ```
 
-#### Scroll Snap para Carruseles
+### 2. scroll-snap: Creando carruseles y secciones deslizables sin JS
+
+#### Definición
+La propiedad scroll-snap permite crear experiencias de desplazamiento suave y controlado sin necesidad de JavaScript, ideal para carruseles y presentaciones.
+
+#### Para qué sirve
+- Crea navegación fluida entre secciones
+- Mejora la experiencia de deslizamiento
+- Simplifica la implementación de carruseles
+
+#### Ejemplos
 ```css
-.carousel-container {
-  scroll-snap-type: x mandatory;
-  overflow-x: auto;
-  display: flex;
-  -webkit-overflow-scrolling: touch;
+/* Contenedor de carrusel */
+.carrusel {
+    scroll-snap-type: x mandatory;
+    overflow-x: scroll;
+    display: flex;
 }
 
-.carousel-slide {
-  scroll-snap-align: start;
-  flex: 0 0 100%;
-  height: 300px;
-  /* Previene el scroll en Safari */
-  scroll-snap-stop: always;
+/* Elementos del carrusel */
+.carrusel-item {
+    scroll-snap-align: start;
+    flex: 0 0 100%;
+    width: 100%;
+}
+
+/* Navegación vertical con snap */
+.pagina-secciones {
+    scroll-snap-type: y proximity;
+    overflow-y: scroll;
+    height: 100vh;
 }
 ```
 
-#### Personalización de Elementos Nativos
+### 3. Personalizando elementos nativos con accent-color
+
+#### Definición
+La propiedad accent-color permite personalizar el color de elementos de formulario nativos como checkboxes, radio buttons y rangos, manteniendo su funcionalidad nativa.
+
+#### Para qué sirve
+- Personaliza elementos de formulario nativos
+- Mantiene la accesibilidad y usabilidad
+- Mejora la consistencia visual
+
+#### Ejemplos
 ```css
-/* Personalización de checkboxes y radios */
-.custom-form {
-  accent-color: var(--brand-color);
+/* Aplicando color de acento global */
+:root {
+    accent-color: #0066cc;
 }
 
-/* Estilizado de scrollbars */
-.custom-scroll {
-  scrollbar-width: thin;
-  scrollbar-color: var(--thumb-color) var(--track-color);
+/* Personalizando elementos específicos */
+.formulario-especial {
+    accent-color: #ff4444;
 }
 
-/* Estilizado de selección de texto */
-::selection {
-  background-color: var(--brand-color);
-  color: white;
-}
-```
-
-#### Casos de Uso Prácticos
-
-##### Menú Desplegable sin JavaScript
-```css
-.dropdown {
-  position: relative;
+/* Diferentes colores por tipo de input */
+input[type="checkbox"] {
+    accent-color: #28a745;
 }
 
-.dropdown-toggle:focus + .dropdown-menu,
-.dropdown-menu:hover {
-  display: block;
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.dropdown-menu {
-  position: absolute;
-  opacity: 0;
-  transform: translateY(-10px);
-  transition: all 0.3s ease;
+input[type="range"] {
+    accent-color: #17a2b8;
 }
 ```
-
-##### Galería de Imágenes Interactiva
-```css
-.gallery {
-  display: grid;
-  gap: 1rem;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-}
-
-.gallery-item:hover {
-  z-index: 1;
-  transform: scale(1.1);
-  transition: transform 0.3s ease;
-}
-
-.gallery-item:focus-within {
-  outline: 3px solid var(--accent-color);
-  outline-offset: 3px;
-}
-```
-
-#### Ventajas y Consideraciones
-- Mejor rendimiento al evitar JavaScript
-- Menor consumo de recursos del navegador
-- Comportamiento nativo y accesible
-- Compatibilidad con gestos táctiles
-- Degradación elegante en navegadores antiguos
-
----
