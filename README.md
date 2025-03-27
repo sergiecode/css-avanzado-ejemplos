@@ -1,6 +1,8 @@
 # CSS Moderno 
 
-## Selectores y funciones avanzadas en CSS
+---
+
+# Selectores y funciones avanzadas en CSS
 
 ### 1. :has() - El selector padre
 
