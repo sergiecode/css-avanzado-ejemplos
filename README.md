@@ -186,6 +186,7 @@ Un componente adaptable es aquel que modifica su diseño y comportamiento basán
         padding-left: 2rem;
     }
 }
+```
 
 ## Variables CSS y mejoras en custom properties
 
